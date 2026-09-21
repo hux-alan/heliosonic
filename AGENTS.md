@@ -2,99 +2,52 @@
 
 ## Project Overview
 
-HelioSonic is a research-oriented heliophysics sonification project.
+HelioSonic is a research-oriented heliophysics sonification project. It transforms spacecraft measurements into auditory representations for scientific exploration, accessibility work, and understanding space physics data.
 
-The goal is to transform spacecraft measurements into meaningful auditory representations for:
-- scientific exploration
-- accessibility applications
-- understanding complex space physics phenomena
+This is not primarily a music-composition project. Preserve physical meaning and scientific traceability over musical polish.
 
-This is not primarily a music composition project. Scientific interpretation and preservation of physical meaning are priorities.
+## Current Stage
 
----
+The project has moved from initial data loading into experimental sonification.
 
-## Current Development Phase
+Established work:
 
-The project is currently in the data exploration phase.
+- ACE SWEPAM Level 2 CDF loading
+- `Vp` cleaning with CDF `FILLVAL`, `VALIDMIN`, and `VALIDMAX`
+- preservation of invalid samples as `NaN`
+- min-max normalization experiments for candidate variables
 
-Current focus:
-- Understanding CDAWeb spacecraft datasets
-- Loading CDF files
-- Exploring variables
-- Determining meaningful sonification mappings
+Active work:
 
-Do not prematurely build the audio synthesis pipeline before validating the scientific variables.
-
----
+- mapping solar-wind speed (`Vp`) to pitch
+- comparing continuous, discrete, sustained, and narrow-range pitch mappings
+- testing timbre and sustained-state behavior
+- understanding discontinuities, missing-data gaps, pitch jumps, and duration-aware pitch transitions
 
 ## Technical Stack
 
-Language:
 - Python
-
-Environment:
 - Jupyter notebooks
 - VS Code
-- Conda environment: heliosonic
-
-Libraries currently used:
-- spacepy
-- cdflib
-- numpy
-- pandas
-- matplotlib
-
----
+- Conda environment: `heliosonic`
+- Current libraries include `cdflib`, `numpy`, `matplotlib`, and related scientific Python tools.
 
 ## Repository Structure
 
-notebooks/
-- exploratory analysis
-- data investigation
+- `notebooks/`: exploratory analysis and sonification experiments
+- `src/`: reusable Python modules
+- `docs/`: documentation, experiment summaries, and development notes
+- `tests/`: automated tests
+- `data/`: local datasets; do not commit large source data files
+- `media/`: selected generated audio or MIDI examples
 
-src/
-- reusable Python modules
+## Working Rules
 
-docs/
-- documentation and project notes
-
-tests/
-- automated tests
-
-data/
-- local datasets (do not commit large files)
-
----
-
-## Coding Style
-
-When writing code:
-- Prefer modular functions over notebook-only code
-- Add comments explaining scientific reasoning
-- Use clear variable names
-- Avoid unnecessary complexity
-- Preserve reproducibility
-
----
-
-## Scientific Considerations
-
-When implementing sonification:
-- Physical interpretation matters more than aesthetics
-- Document why variables are mapped to sound parameters
-- Avoid transformations that hide meaningful scientific signals
-
----
-
-## Current Dataset
-
-Primary exploration:
-- ACE spacecraft data
-- CDAWeb CDF format
-
-Important variables may include:
-- magnetic field components
-- plasma density
-- solar wind velocity
-
-Always verify variable meaning before using it.
+- The user directs the scientific questions, listening judgments, and final experiment decisions.
+- Do not make scientific, perceptual, or musical design decisions silently.
+- Change one experimental dimension at a time unless the user explicitly asks for a broader comparison.
+- Do not smooth, interpolate, fill gaps, remove outliers, change pitch ranges, change instruments, or optimize audio for pleasantness without explicit approval.
+- Preserve `NaN` gaps and never interpolate across missing-data intervals.
+- Document why a variable is mapped to an audio parameter.
+- Prefer modular helper functions when behavior is stable, but keep experiment-specific configuration in notebooks.
+- Keep development notes and failed experiments when they are part of the research record.
