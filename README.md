@@ -1,224 +1,96 @@
 # HelioSonic
 
-> An open-source project exploring the use of data sonification for heliophysics research.
+HelioSonic is an open-source project exploring how heliophysics data can be represented through sound for scientific research and accessibility.
 
-**Status:** Early Development (Summer 2026)
+Most spacecraft data is studied through plots. Sonification offers another way to notice changes, patterns, gaps, and short events within the same data. The goal of HelioSonic is not to turn space data into music, but to test which sound mappings are clear, useful, and still accurate to the original measurements.
 
----
+**Status:** Active development  
+**Current focus:** Sonifying solar-wind speed through pitch
 
-## Overview
+## Current Progress
 
-HelioSonic is an independent software project investigating how spacecraft telemetry can be translated into sound to complement traditional visual analysis.
+The project currently uses ACE SWEPAM Level 2 data from NASA CDAWeb. The first three notebooks established the data workflow by loading CDF files, checking metadata and missing values, comparing variables, and testing normalization methods.
 
-The project explores whether parameter-mapping sonification can help researchers better identify patterns, transitions, and transient events within heliophysics datasets while also improving the accessibility of scientific data.
+Notebook 4 begins the actual sonification work. So far, I have:
 
-Rather than replacing existing visualization tools, HelioSonic aims to provide an additional way of interacting with complex time-series data.
+- created the first reusable pitch-mapping and audio-synthesis framework;
+- generated continuous and discrete-pitch versions of solar-wind speed (`Vp`);
+- compared different playback speeds, pitch ranges, note densities, and normalization methods;
+- preserved missing measurements instead of interpolating across them;
+- exported one prototype as MIDI and tested different instruments; and
+- recorded listening observations in the notebook and development logs.
 
----
+The discrete-note prototypes have been easier to follow than the original continuous sine-wave versions. Changing the instrument also made the audio much more comfortable to hear, but it did not fix the large jumps between some pitches. Wider pitch ranges made changes clearer, although they also created accidental melodies that could distract from the data.
 
-## Motivation
+## Current Experiment
 
-Space physics datasets often contain millions of measurements collected over long periods of time. Researchers typically identify events by visually inspecting plots of magnetic field, plasma, and particle measurements.
+The next experiment will focus on transitions between sustained pitches.
 
-Human hearing is naturally sensitive to changes in rhythm, pitch, and timbre. HelioSonic explores whether those perceptual strengths can complement traditional visualization techniques when exploring spacecraft observations.
+An immediate jump between two distant pitches can sound jarring. A short glide may make the change easier to follow, but it could also blur a spike that lasts only a fraction of a second. I plan to compare hard transitions, fixed glides, and glides that adjust to the duration of each event while keeping the other audio settings the same.
 
-The project is inspired by three interests:
+## Notebooks
 
-- Heliophysics research
-- Music and audio engineering
-- Scientific software development
+| Notebook | Focus |
+| --- | --- |
+| `01_explore_CDF.ipynb` | Load and inspect NASA CDF data |
+| `02_understand_variables.ipynb` | Study data quality, distributions, and possible variables |
+| `03_normalize_variables.ipynb` | Compare normalization methods before sonification |
+| `04_sonification_mapping.ipynb` | Build and listen to the first sonification prototypes |
 
----
+## Working Principles
 
-## Current Goals
+- Preserve gaps and scientifically meaningful changes in the data.
+- Change one part of the mapping at a time so comparisons remain useful.
+- Do not make the audio smoother or more musical unless the effect on the data is understood.
+- Keep pitch, volume, rhythm, duration, timbre, and stereo position available as possible ways to represent different variables.
+- Document unsuccessful experiments as well as successful ones.
 
-This summer, the project focuses on building a reliable engineering foundation before investigating research questions.
+## Repository Structure
 
-Current objectives include:
-
-- Build a reproducible pipeline for reading NASA CDF files
-- Develop a modular sonification engine
-- Explore multiple parameter-to-audio mapping strategies
-- Compare different normalization methods
-- Produce reproducible audio demonstrations
-
-Future work may investigate:
-
-- Scientific event exploration
-- Accessibility for blind and low-vision researchers
-- Human-computer interaction
-- AI-assisted scientific workflows
-
----
-
-# Development Roadmap
-
-## Phase 1 — Data Pipeline
-
-**Status:** In Progress
-
-Objectives:
-
-- Read Level-2 spacecraft CDF files
-- Extract selected physical variables
-- Handle missing values and metadata
-- Normalize physical units
-- Build reusable preprocessing functions
-
-Planned libraries:
-
-- Python
-- NumPy
-- SciPy
-- cdflib
-- SpacePy
-
----
-
-## Phase 2 — Sonification Engine
-
-**Status:** Planned
-
-The first prototype will investigate simple parameter-mapping sonification.
-
-Example mappings under consideration:
-
-| Physical Quantity | Audio Property |
-|------------------|---------------|
-| Magnetic field magnitude | Pitch |
-| Plasma density | Timbre |
-| Solar wind speed | Tempo |
-| Magnetic field direction | Stereo position |
-
-These mappings are experimental and will likely evolve throughout development.
-
----
-
-## Phase 3 — Prototype Evaluation
-
-Once the initial prototype is functional, the project will compare different sonification approaches by asking questions such as:
-
-- Which mappings are easiest to distinguish?
-- Which preserve meaningful physical structure?
-- Which become fatiguing over long listening sessions?
-- How should multiple variables be represented simultaneously?
-
----
-
-# Repository Structure
-
-```
+```text
 heliosonic/
-
-├── README.md
-├── LICENSE
-├── src/
-│   ├── ingestion.py
-│   ├── preprocessing.py
-│   ├── mapping.py
-│   └── sonification.py
-│
-├── notebooks/
-│   └── prototype.ipynb
-│
-├── examples/
-│
-├── docs/
-│   ├── roadmap.md
-│   ├── design_notes.md
-│   └── devlog.md
-│
-├── media/
-│
-└── tests/
+|-- notebooks/       # Data exploration and sonification experiments
+|-- docs/devlog/     # Dated development notes
+|-- media/           # Audio and MIDI examples
+|-- examples/        # Example workflows and outputs
+|-- src/             # Reusable code as the project develops
+|-- tests/           # Future automated tests
+|-- AGENTS.md
+|-- requirements.txt
+`-- LICENSE
 ```
 
----
+## Setup
 
-# Engineering Philosophy
+```bash
+git clone https://github.com/hux-alan/heliosonic.git
+cd heliosonic
+python -m pip install -r requirements.txt
+```
 
-This repository is intended to document the engineering process rather than only the finished software.
+The source CDF files are not stored in the repository, so the notebooks may require a local ACE SWEPAM file and an updated data path.
 
-Development emphasizes:
+## Collaborating
 
-- Small, testable milestones
-- Reproducible experiments
-- Iterative design
-- Open documentation
-- Clear engineering decisions
+I am currently looking for people interested in helping with heliophysics, audio and signal processing, accessibility, human-computer interaction, Python development, or documentation.
 
-Both successful prototypes and failed experiments will be documented as the project evolves.
+Before changing a sonification method, please look through the related notebook and recent development logs. New experiments should make clear what is being changed, what is being held constant, and what information the change could hide or distort.
 
----
+Some of the main areas I hope to work on next are:
 
-# Development Log
+- testing pitch-transition methods without losing short events;
+- moving stable notebook code into reusable modules;
+- connecting sounds back to exact spacecraft times and measurements;
+- developing better ways to evaluate clarity and listening fatigue;
+- exploring additional variables after the first pitch framework is stronger; and
+- eventually working with blind and low-vision users to evaluate accessibility.
 
-Major milestones will be tracked in `docs/devlog.md`.
+## Long-Term Direction
 
-Example entries include:
+I hope to develop HelioSonic into a tool where researchers can load a heliophysics dataset, inspect its variables, choose how they are mapped to sound, compare different sonifications, and connect what they hear back to the original measurements.
 
-- Prototype updates
-- Architecture decisions
-- Audio mapping experiments
-- Performance improvements
-- Research discussions
-- Lessons learned
+Sonification would not replace plots. It would give researchers another way to explore the same data and make that data usable by more people.
 
----
+## License
 
-# Current Progress
-
-## Completed
-
-- Project planning
-- Initial architecture
-- Repository setup
-- Licensing
-- Literature review on sonification
-- Preliminary software design
-
-## In Progress
-
-- Data ingestion pipeline
-- Parameter normalization
-- First prototype
-
-## Planned
-
-- Audio synthesis engine
-- Demonstration notebooks
-- Example audio outputs
-- Validation experiments
-- Documentation website
-
----
-
-# Long-Term Vision
-
-HelioSonic is intended to become an open-source platform for exploring sonification within heliophysics.
-
-Possible future directions include:
-
-- Support for additional NASA missions
-- Interactive visualization interfaces
-- AI-assisted event exploration
-- Educational demonstrations
-- Community contributions
-
-As the project matures, documentation and code examples will expand alongside new functionality.
-
----
-
-# Acknowledgments
-
-This project is developed independently while drawing inspiration from ongoing heliophysics research and open scientific software communities.
-
-The project benefits from discussions with researchers working in space physics and scientific computing.
-
----
-
-# License
-
-Licensed under the Apache License 2.0.
-
-See the `LICENSE` file for details.
+Licensed under the Apache License 2.0. See `LICENSE` for details.
